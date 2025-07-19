@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Source's Stream Tool</title>
+  <style>
+    body {
+      background-color: #111;
+      color: white;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: auto auto auto auto;
+      gap: 0px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      padding: 5px;
+      width: 150px;
+      background-color: #222;
+      border: 1px solid #555;
+      color: white;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 6px 12px;
+      background-color: #00a606;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background-color: #006203;
+    }
+
+    .centered-row {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+    }
+  </style>
+
+</head>
+<body>
+  <div class="centered-row">
+    <h2>Players</h2>
+  </div>
+
+  <!-- Player Names + Scores -->
+  <div class="form-grid section">
+    <label>Player 1</label>
+    <input type="text" id="player1_name" value="{{ data.player1_name }}">
+    <label>Player 2</label>
+    <input type="text" id="player2_name" value="{{ data.player2_name }}">
+
+    <label>Score</label>
+    <input type="number" id="player1_score" value="{{ data.player1_score }}">
+    <label>Score</label>
+    <input type="number" id="player2_score" value="{{ data.player2_score }}">
+  </div>
+
+  <!-- Swap Players Button -->
+  <div class="centered-row">
+    <button onclick="swapPlayers()">⇄ Swap Players</button>
+  </div>
+
+  <br>
+
+  <div class="centered-row">
+    <h2>Commentators</h2>
+  </div>
+
+  <!-- Commentators -->
+  <div class="form-grid section">
+    <label>Comms 1</label>
+    <input type="text" id="commentator1" value="{{ data.commentator1 }}">
+    <label>Comms 2</label>
+    <input type="text" id="commentator2" value="{{ data.commentator2 }}">
+  </div>
+
+  <!-- Swap Commentators Button -->
+  <div class="centered-row">
+    <button onclick="swapCommentators()">⇄ Swap Commentators</button>
+  </div>
+
+  <br>
+
+  <div class="centered-row">
+    <h2>Round Info</h2>
+  </div>
+
+  <!-- Round and Best Of -->
+  <div class="form-grid section">
+    <label>Round</label>
+    <input type="text" id="round" value="{{ data.round }}">
+    <label>Best Of</label>
+    <input type="number" id="bestof" value="{{ data.bestof }}">
+  </div>
+
+  <!-- Update Button -->
+  <div class="centered-row">
+    <button onclick="saveData()">Update Data</button>
+  </div>
+
+  <script>
+    function getField(id) {
+      return document.getElementById(id).value;
+    }
+
+    function setField(id, val) {
+      document.getElementById(id).value = val;
+    }
+
+    function swapPlayers() {
+      const name1 = getField('player1_name');
+      const name2 = getField('player2_name');
+      const player1_score = getField('player1_score');
+      const player2_score = getField('player2_score');
+      setField('player1_name', name2);
+      setField('player2_name', name1);
+      setField('player1_score', player2_score);
+      setField('player2_score', player1_score);
+    }
+
+    function swapCommentators() {
+      const comm1 = getField('commentator1');
+      const comm2 = getField('commentator2');
+      setField('commentator1', comm2);
+      setField('commentator2', comm1);
+    }
+
+    function saveData() {
+      const data = {
+        player1_name: getField('player1_name'),
+        player2_name: getField('player2_name'),
+        player1_score: getField('player1_score'),
+        player2_score: getField('player2_score'),
+        commentator1: getField('commentator1'),
+        commentator2: getField('commentator2'),
+        round: getField('round'),
+        bestof: getField('bestof')
+      };
+
+      fetch('/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      //.then(data => alert(data.message))
+      .catch(err => alert("Error saving data"));
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        saveData();
+      }
+    });
+
+    window.onload = function () {
+      saveData();
+    };
+  </script>
+</body>
+</html>
