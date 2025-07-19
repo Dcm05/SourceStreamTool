@@ -1,5 +1,5 @@
 
-# Source's Stream Tool
+# SourceStreamTool
 A web-app used to update stream overlays
 
 # Set Up
