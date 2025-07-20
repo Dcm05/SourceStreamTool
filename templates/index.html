@@ -26,10 +26,25 @@
       font-weight: bold;
     }
 
-    input[type="text"],
+    input[type="text"] {
+      padding: 5px;
+      width: 120px;
+      background-color: #222;
+      border: 1px solid #555;
+      color: white;
+    }  
+  
+    input[readonly] {
+      padding: 5px;
+      width: 60px;
+      background-color: #222;
+      border: 1px solid #555;
+      color: white;
+    } 
+
     input[type="number"] {
       padding: 5px;
-      width: 150px;
+      width: 30px;
       background-color: #222;
       border: 1px solid #555;
       color: white;
@@ -41,9 +56,9 @@
 
     button {
       padding: 6px 12px;
-      background-color: #00a606;
       color: white;
-      border: none;
+      background-color: #009905;
+      border: 1px solid rgb(190, 190, 190);
       cursor: pointer;
       font-size: 14px;
     }
@@ -57,68 +72,79 @@
       justify-content: center;
       margin: 10px 0;
     }
+
+    .red-button {
+      background-color: rgb(177, 0, 0);
+    }
+
+    .red-button:hover{
+      background-color: rgb(109, 0, 0);
+    }
+
   </style>
 
 </head>
 <body>
+  
+  <!-- Round and Best Of -->
   <div class="centered-row">
-    <h2>Players</h2>
+    <!--body>Round</body-->
+    <input type="text" id="round" placeholder="Round" value="{{ data.round }}">
+    <input value="Best Of" width="90px" readonly></input>
+    <input type="number" id="bestof" min="1" max="9" step="2" value="{{ data.bestof }}">
   </div>
 
+  <br>
+  <br>
+  
   <!-- Player Names + Scores -->
-  <div class="form-grid section">
-    <label>Player 1</label>
-    <input type="text" id="player1_name" value="{{ data.player1_name }}">
-    <label>Player 2</label>
-    <input type="text" id="player2_name" value="{{ data.player2_name }}">
+  <div class="centered-row">
+    <!--label>P1 Nametag</label-->
+    <input type="text" id="player1_name" placeholder="Player 1" value="{{ data.player1_name }}">
+    <!--label>P2 Nametag </label-->
+    <input type="text" id="player2_name" placeholder="Player 2" value="{{ data.player2_name }}">
+  </div>
 
-    <label>Score</label>
+  <div class="centered-row">
+    <!--label>P1 Score</label-->
     <input type="number" id="player1_score" value="{{ data.player1_score }}">
-    <label>Score</label>
+    <!--label>P2 Score</label-->
     <input type="number" id="player2_score" value="{{ data.player2_score }}">
   </div>
 
   <!-- Swap Players Button -->
   <div class="centered-row">
-    <button onclick="swapPlayers()">⇄ Swap Players</button>
+    <button onclick="swapPlayers()">⇄</button>
+    <button onclick="resetScores()">⟳</button>
   </div>
 
   <br>
-
-  <div class="centered-row">
-    <h2>Commentators</h2>
-  </div>
+  <br>
 
   <!-- Commentators -->
-  <div class="form-grid section">
-    <label>Comms 1</label>
-    <input type="text" id="commentator1" value="{{ data.commentator1 }}">
-    <label>Comms 2</label>
-    <input type="text" id="commentator2" value="{{ data.commentator2 }}">
+  <div class="centered-row">
+    <!--label>Comms 1</label-->
+    <input type="text" id="commentator1" placeholder="Commentator 1" value="{{ data.commentator1 }}">
+    <!--label>Comms 2</label-->
+    <input type="text" id="commentator2" placeholder="Commentator 2"value="{{ data.commentator2 }}">
   </div>
 
   <!-- Swap Commentators Button -->
   <div class="centered-row">
-    <button onclick="swapCommentators()">⇄ Swap Commentators</button>
+    <button onclick="swapCommentators()">⇄</button>
+  </div>
+
+  <br>
+
+  <!-- Update Button -->
+  <div class="centered-row">
+    <button onclick="saveData()">Update Data</button>
   </div>
 
   <br>
 
   <div class="centered-row">
-    <h2>Round Info</h2>
-  </div>
-
-  <!-- Round and Best Of -->
-  <div class="form-grid section">
-    <label>Round</label>
-    <input type="text" id="round" value="{{ data.round }}">
-    <label>Best Of</label>
-    <input type="number" id="bestof" value="{{ data.bestof }}">
-  </div>
-
-  <!-- Update Button -->
-  <div class="centered-row">
-    <button onclick="saveData()">Update Data</button>
+    <button class="red-button" onclick="resetAll()">Reset All</button>
   </div>
 
   <script>
@@ -139,6 +165,22 @@
       setField('player2_name', name1);
       setField('player1_score', player2_score);
       setField('player2_score', player1_score);
+    }
+
+    function resetScores() {
+      setField('player1_score', 0);
+      setField('player2_score', 0);
+    }
+
+    function resetAll() {
+      setField('player1_name', "Player 1");
+      setField('player2_name', "Player 2");
+      setField('player1_score', 0);
+      setField('player2_score', 0);
+      setField('commentator1', "Commentator 1");
+      setField('commentator2', "Commentator 2");
+      setField('round', "Winners Round 1");
+      setField('bestof', 3);
     }
 
     function swapCommentators() {

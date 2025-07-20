@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import os
 
-
-
 app = Flask(__name__)
 
 # Path to the folder where text files are stored
@@ -18,7 +16,7 @@ FIELDS = {
     "commentator1": "Commentator 1",
     "commentator2": "Commentator 2",
     "round": "Winners Round 1",
-    "bestof": "5"
+    "bestof": "3"
 }
 
 @app.route('/')
@@ -28,7 +26,12 @@ def index():
         file_path = os.path.join(TEXT_FOLDER, f"{key}.txt")
         try:
             with open(file_path, "r", encoding="utf-8") as f:
-                data[key] = f.read().strip()
+                if key == "bestof":
+                    for i in f.read().strip():
+                        if i == "1" or i == "3" or i == "5" or i == "7" or i == "9":
+                             data[key] = i
+                else:
+                    data[key] = f.read().strip()
         except FileNotFoundError:
             data[key] = default
     return render_template("index.html", data=data)
@@ -40,7 +43,11 @@ def save():
         for key, value in data.items():
             file_path = os.path.join(TEXT_FOLDER, f"{key}.txt")
             with open(file_path, 'w', encoding='utf-8') as f:
-                f.write(value)
+                if key == "bestof":
+                
+                    f.write("Best of " +value)
+                else:
+                    f.write(value)
         return jsonify({"message": "Data saved successfully!"})
     except Exception as e:
         return jsonify({"message": f"Error: {e}"}), 500
