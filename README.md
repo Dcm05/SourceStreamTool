@@ -12,6 +12,9 @@ A web-app used to update stream overlays
 # Please Note
 The python script must be left running in order to update all data.
 
+# Building EXE
+python -m PyInstaller --onefile --name SourceStreamTool main.py
+
 # Credits
 - Dcm05
 - ChatGPT
