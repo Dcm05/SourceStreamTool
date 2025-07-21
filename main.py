@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, redirect
 import os
 import sys
+import traceback
 
-# Get base directory (handles both .py and .exe usage)
-if getattr(sys, 'frozen', False):
+app = Flask(__name__)
+
+if getattr(sys, "frozen", False):
     base_dir = os.path.dirname(sys.executable)
 else:
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -11,68 +13,50 @@ else:
 def get_file_path(filename):
     return os.path.join(base_dir, filename)
 
-def resource_path(relative_path):
-    """Get absolute path to resource, works for dev and for PyInstaller"""
+def read_or_default(filename, default=""):
     try:
-        base_path = sys._MEIPASS  # When bundled
-    except Exception:
-        base_path = os.path.abspath(".")
+        with open(get_file_path(filename), "r", encoding="utf-8") as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        return default
 
-    return os.path.join(base_path, relative_path)
-
-template_dir = resource_path('templates')
-static_dir = resource_path('static')
-app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
-
-
-
-# Path to the folder where text files are stored
-TEXT_FOLDER = os.path.join(os.path.dirname(__file__), 'Text Files')
-os.makedirs(TEXT_FOLDER, exist_ok=True)  # Create the folder if it doesn't exist
-
-# Define the fields and their default values
-FIELDS = {
-    "player1_name": "Player 1",
-    "player2_name": "Player 2",
-    "player1_score": "0",
-    "player2_score": "0",
-    "commentator1": "Commentator 1",
-    "commentator2": "Commentator 2",
-    "round": "Winners Round 1",
-    "bestof": "3"
-}
-
-@app.route('/')
+@app.route("/", methods=["GET", "POST"])
 def index():
-    data = {}
-    for key, default in FIELDS.items():
-        file_path = os.path.join(TEXT_FOLDER, f"{key}.txt")
+    if request.method == "POST":
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
-                if key == "bestof":
-                    for i in f.read().strip():
-                        if i == "1" or i == "3" or i == "5" or i == "7" or i == "9":
-                             data[key] = i
-                else:
-                    data[key] = f.read().strip()
-        except FileNotFoundError:
-            data[key] = default
-    return render_template("index.html", data=data)
+            # Try to read JSON first
+            form_data = request.get_json()
+            if not form_data:
+                # Fallback to form (in case JSON is missing)
+                form_data = request.form
 
-@app.route('/save', methods=['POST'])
-def save():
-    data = request.json
-    try:
-        for key, value in data.items():
-            file_path = os.path.join(TEXT_FOLDER, f"{key}.txt")
-            with open(file_path, 'w', encoding='utf-8') as f:
-                if key == "bestof":
-                    f.write("Best of " +value)
-                else:
-                    f.write(value)
-        return jsonify({"message": "Data saved successfully!"})
-    except Exception as e:
-        return jsonify({"message": f"Error: {e}"}), 500
+            print("Form data received:")
+            for key, value in form_data.items():
+                print(f"  {key} = {value}")
+                path = get_file_path(f"{key}.txt")
+                with open(path, "w", encoding="utf-8") as f:
+                    f.write(str(value))
 
-if __name__ == '__main__':
-    app.run(debug=False)
+            return "", 204  # No content response
+        except Exception as e:
+            print("=== ERROR WHILE SAVING ===")
+            traceback.print_exc()
+            return f"Error saving data: {e}", 500
+        
+    data = {
+        "player1": read_or_default("player1.txt", "Player 1"),
+        "player2": read_or_default("player2.txt", "Player 2"),
+        "score1": read_or_default("score1.txt", "0"),
+        "score2": read_or_default("score2.txt", "0"),
+        "round": read_or_default("round.txt", "Winners Round 1"),
+        "bestof": read_or_default("bestof.txt", "5"),
+        "commentator1": read_or_default("commentator1.txt", "Commentator 1"),
+        "commentator2": read_or_default("commentator2.txt", "Commentator 2"),
+    }
+    return render_template("index.html", **data)
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+
+    
