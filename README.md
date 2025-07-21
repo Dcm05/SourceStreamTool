@@ -12,6 +12,7 @@ A web-app used to update stream overlays
 # Please Note
 The executable must be left running in order to update all data.
 
+# Feature Requests
 Feel free to email me at sourcessb@gmail.com for feature requests!
 
 # Credits
