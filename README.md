@@ -13,7 +13,7 @@ A web-app used to update stream overlays
 The python script must be left running in order to update all data.
 
 # Building EXE
-python -m PyInstaller --onefile --name SourceStreamTool main.py
+python -m PyInstaller --onefile --name SourceStreamTool --add-data "templates;templates" main.py
 
 # Credits
 - Dcm05
