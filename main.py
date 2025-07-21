@@ -13,7 +13,9 @@ def resource_path(relative_path):
 # import webview
 
 template_dir = resource_path('templates')
-app = Flask(__name__, template_folder=template_dir)
+static_dir = resource_path('static')
+app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
+
 
 
 # Path to the folder where text files are stored
