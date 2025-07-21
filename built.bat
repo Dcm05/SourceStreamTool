@@ -14,6 +14,7 @@ python -m PyInstaller --onefile --name %EXENAME% ^
 --icon=logo.ico ^
 --add-data "templates;templates" ^
 --add-data "static;static" ^
+--version-file=version_info.txt ^
 main.py
 
 echo.
