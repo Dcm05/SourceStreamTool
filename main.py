@@ -1,8 +1,20 @@
 from flask import Flask, render_template, request, jsonify
 import os
+import sys
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        base_path = sys._MEIPASS  # When bundled
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 # import webview
 
-app = Flask(__name__)
+template_dir = resource_path('templates')
+app = Flask(__name__, template_folder=template_dir)
+
 
 # Path to the folder where text files are stored
 TEXT_FOLDER = os.path.join(os.path.dirname(__file__), 'Text Files')
