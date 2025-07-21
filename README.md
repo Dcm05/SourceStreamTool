@@ -12,7 +12,7 @@ A web-app used to update stream overlays
 # Please Note
 The executable must be left running in order to update all data.
 
-Feel free to <a href="mailto:sourcessb%40gmail.com?subject=SST Feature Request: &body=Insert request here.">email me</a> for feature requests!
+Feel free to email me at sourcessb@gmail.com for feature requests!
 
 # Credits
 - Dcm05
