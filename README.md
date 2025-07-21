@@ -10,7 +10,7 @@ A web-app used to update stream overlays
 5. Customize the text to you hearts conent!
 
 # Please Note
-The python script must be left running in order to update all data.
+The executable must be left running in order to update all data.
 
 # Credits
 - Dcm05
