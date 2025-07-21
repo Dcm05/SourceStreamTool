@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect
 import os
 import sys
+import winshell
+from win32com.client import Dispatch
 import traceback
 
 app = Flask(__name__)
@@ -24,6 +26,23 @@ def read_or_default(filename, default=""):
             return f.read().strip()
     except FileNotFoundError:
         return default
+
+def create_shortcut():
+    base_dir = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(sys.argv[0])))
+    shortcut_path = os.path.join(base_dir, "Stream Controller.lnk")
+
+    if not os.path.exists(shortcut_path):
+        shell = Dispatch('WScript.Shell')
+        shortcut = shell.CreateShortCut(shortcut_path)
+
+        # Use cmd.exe to launch the default browser
+        shortcut.Targetpath = os.path.join(os.environ["WINDIR"], "System32", "cmd.exe")
+        shortcut.Arguments = '/c start http://localhost:5000/'
+        shortcut.IconLocation = os.path.join(base_dir, "static", "logo.ico")
+        shortcut.WindowStyle = 1
+        shortcut.Description = "Stream Controller"
+        shortcut.WorkingDirectory = base_dir
+        shortcut.save()
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -58,4 +77,5 @@ def index():
     return render_template("index.html", **data)
 
 if __name__ == "__main__":
+    create_shortcut()
     app.run(debug=True)

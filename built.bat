@@ -1,6 +1,6 @@
 @echo off
 REM Set executable name
-set EXENAME=SourceStreamTool
+set EXENAME=Latest
 
 REM Clean previous builds (optional)
 echo Cleaning old build...
