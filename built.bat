@@ -11,6 +11,7 @@ del /q %EXENAME%.spec
 REM Build with PyInstaller
 echo Building %EXENAME%.exe...
 python -m PyInstaller --onefile --name %EXENAME% ^
+--icon=logo.ico ^
 --add-data "templates;templates" ^
 --add-data "static;static" ^
 main.py
