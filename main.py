@@ -2,6 +2,15 @@ from flask import Flask, render_template, request, jsonify
 import os
 import sys
 
+# Get base directory (handles both .py and .exe usage)
+if getattr(sys, 'frozen', False):
+    base_dir = os.path.dirname(sys.executable)
+else:
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+
+def get_file_path(filename):
+    return os.path.join(base_dir, filename)
+
 def resource_path(relative_path):
     """Get absolute path to resource, works for dev and for PyInstaller"""
     try:
@@ -10,7 +19,6 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
 
     return os.path.join(base_path, relative_path)
-# import webview
 
 template_dir = resource_path('templates')
 static_dir = resource_path('static')
@@ -59,7 +67,6 @@ def save():
             file_path = os.path.join(TEXT_FOLDER, f"{key}.txt")
             with open(file_path, 'w', encoding='utf-8') as f:
                 if key == "bestof":
-                
                     f.write("Best of " +value)
                 else:
                     f.write(value)
