@@ -12,6 +12,8 @@ A web-app used to update stream overlays
 # Please Note
 The executable must be left running in order to update all data.
 
+Feel free to <a href="mailto:sourcessb@gmail.com?subject=SST Feature Request: &body=Insert request here.">email me</a> for feature requests!
+
 # Credits
 - Dcm05
 - ChatGPT
