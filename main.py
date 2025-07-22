@@ -4,8 +4,10 @@ import sys
 import winshell
 from win32com.client import Dispatch
 import traceback
+import re
 
 app = Flask(__name__)
+bestof_list = ["1","3","5","7","9"]
 
 # Determine base directory for script or EXE
 if getattr(sys, "frozen", False):
@@ -23,9 +25,17 @@ def get_file_path(filename):
 def read_or_default(filename, default=""):
     try:
         with open(get_file_path(filename), "r", encoding="utf-8") as f:
-            return f.read().strip()
+            content = f.read().strip()
+            if filename == "bestof.txt":
+                match = re.match(r"Best of (\d+)", content)
+                if match:
+                    return match.group(1)  # Return just the number part (e.g., "3")
+                else:
+                    return default  # Fallback if pattern doesn't match
+            return content
     except FileNotFoundError:
         return default
+
 
 def create_shortcut():
     try:
@@ -65,7 +75,10 @@ def index():
             for key, value in form_data.items():
                 path = get_file_path(f"{key}.txt")
                 with open(path, "w", encoding="utf-8") as f:
-                    f.write(str(value))
+                    if key == "bestof":
+                        f.write("Best of " + str(value))
+                    else:
+                        f.write(str(value))
 
             return "", 204
         except Exception as e:
@@ -80,9 +93,10 @@ def index():
         "score1": read_or_default("score1.txt", "0"),
         "score2": read_or_default("score2.txt", "0"),
         "round": read_or_default("round.txt", "Winners Round 1"),
-        "bestof": read_or_default("bestof.txt", "5"),
+        "bestof": read_or_default("bestof.txt", "3"),
         "commentator1": read_or_default("commentator1.txt", "Commentator 1"),
         "commentator2": read_or_default("commentator2.txt", "Commentator 2"),
+        "tournament": read_or_default("Tournament.txt", "Tournament Name"),
     }
     return render_template("index.html", **data)
 

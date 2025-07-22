@@ -87,6 +87,14 @@
 </head>
 <body>
   
+  <!-- Tournament Name -->
+  <div class="centered-row">
+    <input type="text" id="tournament" placeholder="Tournament Name" value="{{ tournament }}">
+  </div>
+
+  <br>
+  <br>
+
   <!-- Round and Best Of -->
   <div class="centered-row">
     <!--body>Round</body-->
@@ -101,9 +109,9 @@
   <!-- Player Names + Scores -->
   <div class="centered-row">
     <!--label>P1 Nametag</label-->
-    <input type="text" id="player1" placeholder="Player 1" value="{{ player1 }}">
+    <input type="text" id="player1" placeholder="Player 1" min="0" value="{{ player1 }}">
     <!--label>P2 Nametag </label-->
-    <input type="text" id="player2" placeholder="Player 2" value="{{ player2 }}">
+    <input type="text" id="player2" placeholder="Player 2" min="0" value="{{ player2 }}">
   </div>
 
   <div class="centered-row">
@@ -181,6 +189,7 @@
       setField('commentator1', "Commentator 1");
       setField('commentator2', "Commentator 2");
       setField('round', "Winners Round 1");
+      setField('tournament', "Tournament Name");
       setField('bestof', 3);
     }
 
@@ -200,6 +209,7 @@
         commentator1: getField('commentator1'),
         commentator2: getField('commentator2'),
         round: getField('round'),
+        tournament: getField('tournament'),
         bestof: getField('bestof')
       };
 
