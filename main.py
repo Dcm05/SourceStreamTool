@@ -28,22 +28,31 @@ def read_or_default(filename, default=""):
         return default
 
 def create_shortcut():
-    shortcut_path = os.path.join(base_dir, "Stream Controller.lnk")
-    icon_path = os.path.join(base_dir, "static", "logo.ico")
-    if os.path.exists(icon_path):
-        shortcut.IconLocation = icon_path
+    try:
+        shortcut_path = os.path.join(base_dir, "StreamController.lnk")
 
+        # Handle icon path depending on if we're in a PyInstaller bundle or not
+        if getattr(sys, "frozen", False):
+            # In EXE mode: __MEIPASS is where PyInstaller extracts files
+            icon_path = os.path.join(sys._MEIPASS, "static", "logo.ico")
+        else:
+            icon_path = os.path.join(base_dir, "static", "logo.ico")
 
-    if not os.path.exists(shortcut_path):
+        target_path = "C:\\Windows\\System32\\cmd.exe"
+        arguments = '/c start http://localhost:5000/'
+
         shell = Dispatch('WScript.Shell')
         shortcut = shell.CreateShortCut(shortcut_path)
-        shortcut.Targetpath = os.path.join(os.environ["WINDIR"], "System32", "cmd.exe")
-        shortcut.Arguments = '/c start http://localhost:5000/'
-        shortcut.IconLocation = icon_path if os.path.exists(icon_path) else ""
-        shortcut.WindowStyle = 1
-        shortcut.Description = "Stream Controller"
+        shortcut.TargetPath = target_path
+        shortcut.Arguments = arguments
         shortcut.WorkingDirectory = base_dir
-        shortcut.save()
+        if os.path.exists(icon_path):
+            shortcut.IconLocation = icon_path
+        shortcut.Save()
+    except Exception as e:
+        print("Failed to create shortcut:")
+        traceback.print_exc()
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
