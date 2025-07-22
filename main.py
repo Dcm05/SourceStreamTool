@@ -28,17 +28,18 @@ def read_or_default(filename, default=""):
         return default
 
 def create_shortcut():
-    base_dir = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(sys.argv[0])))
     shortcut_path = os.path.join(base_dir, "Stream Controller.lnk")
+    icon_path = os.path.join(base_dir, "static", "logo.ico")
+    if os.path.exists(icon_path):
+        shortcut.IconLocation = icon_path
+
 
     if not os.path.exists(shortcut_path):
         shell = Dispatch('WScript.Shell')
         shortcut = shell.CreateShortCut(shortcut_path)
-
-        # Use cmd.exe to launch the default browser
         shortcut.Targetpath = os.path.join(os.environ["WINDIR"], "System32", "cmd.exe")
         shortcut.Arguments = '/c start http://localhost:5000/'
-        shortcut.IconLocation = os.path.join(base_dir, "static", "logo.ico")
+        shortcut.IconLocation = icon_path if os.path.exists(icon_path) else ""
         shortcut.WindowStyle = 1
         shortcut.Description = "Stream Controller"
         shortcut.WorkingDirectory = base_dir

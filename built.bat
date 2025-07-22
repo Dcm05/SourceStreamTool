@@ -1,6 +1,6 @@
 @echo off
 REM Set executable name
-set EXENAME=Latest
+set EXENAME=SourceStreamTool
 
 REM Clean previous builds (optional)
 echo Cleaning old build...
@@ -14,6 +14,7 @@ python -m PyInstaller --onefile --name %EXENAME% ^
 --icon=logo.ico ^
 --add-data "templates;templates" ^
 --add-data "static;static" ^
+--add-data "static/logo.ico;static" ^
 --version-file=version_info.txt ^
 main.py
 
