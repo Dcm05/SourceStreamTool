@@ -13,7 +13,7 @@ A web-app used to update stream overlays
 The executable must be left running in order to update all data.
 
 # Feature Requests
-Feel free to email me at sourcessb@gmail.com for feature requests!
+Feel free to fill out a [feature request form](https://docs.google.com/forms/d/e/1FAIpQLSfelN7yE6UQMdmEjFPVqRwA8UQfZCwiILYk8GxvQOBBd6IF0w/viewform) or email me at sourcessb@gmail.com for feature requests!
 
 # Credits
 - Dcm05
