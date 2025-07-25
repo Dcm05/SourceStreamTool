@@ -65,9 +65,9 @@ def create_shortcut():
     except Exception as e:
         print("Failed to create shortcut:")
         traceback.print_exc()
-        
 
 @app.route("/", methods=["GET", "POST"])
+
 def index():
     if request.method == "POST":
         try:
@@ -107,5 +107,5 @@ webview.create_window("Test",app)
 
 if __name__ == "__main__":
     create_shortcut()
-    
+    app.run(debug="True")
     webview.start()
