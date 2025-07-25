@@ -5,8 +5,11 @@ import winshell
 from win32com.client import Dispatch
 import traceback
 import re
+import webview
 
 app = Flask(__name__)
+app2_template = "http://www.example.com/index.html"
+
 bestof_list = ["1","3","5","7","9"]
 
 # Determine base directory for script or EXE
@@ -62,7 +65,7 @@ def create_shortcut():
     except Exception as e:
         print("Failed to create shortcut:")
         traceback.print_exc()
-
+        
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -100,6 +103,9 @@ def index():
     }
     return render_template("index.html", **data)
 
+webview.create_window("Test",app)
+
 if __name__ == "__main__":
     create_shortcut()
-    app.run(debug=True)
+    
+    webview.start()
